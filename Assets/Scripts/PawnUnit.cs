@@ -5,14 +5,16 @@ using UnityEngine;
 public class PawnUnit : MonoBehaviour
 {
     //Our state
+    
+
     StateManager<PawnUnit> pState;
     
-    
+   
 
     void Start()
     {
         pState = new Patrolling();
-        m_Gold = 0;
+        health = 0;
     }
 
     //This is called by our console application periodically
@@ -30,6 +32,15 @@ public class PawnUnit : MonoBehaviour
 
     //public members
     //These values can be monitored and editted by our "states"
-    public int m_Gold;
-    public int m_BankedGold;
+    public int health;
+    public int damage;
+    public float speed; 
+
+
+    public void Move()
+    {
+        Debug.Log("Moving forward/to enemy");
+        transform.position = transform.position + new Vector3(1, 0, 0 );
+        health++; 
+    }
 }

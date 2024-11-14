@@ -1,27 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using UnityEngine;
 
 public class Patrolling : StateManager<PawnUnit>
 {
     public override void Execute(PawnUnit parentClass)
     {
-        Debug.Log("Mining for gold...");
+        Debug.Log("Patrolling");
 
-        
+        parentClass.Invoke("Move", parentClass.speed);
 
-        if (parentClass.m_Gold >= 6)
+
+        if (parentClass.health >= 6)
         {
-            parentClass.ChangeState(new BankingGold());
+            parentClass.ChangeState(new Fighting());
         }
 
     }
 
 
-    public void Walking()
-    {
-        Debug.Log("Rigidbody velocity moving");
-        parentClass.m_Gold++;
-    }
 }
