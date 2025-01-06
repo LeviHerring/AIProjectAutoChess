@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UIElements.Experimental;
 
-public class PawnUnit : MonoBehaviour
+public class PawnUnit : UnitBase
 {
     //Our state
     private StateManager<PawnUnit> currentState;
@@ -16,6 +16,7 @@ public class PawnUnit : MonoBehaviour
 
     void Start()
     {
+        UnitManager.Instance.RegisterUnit(this);
         pState = new Patrolling();
         health = 0;
     }
@@ -46,10 +47,7 @@ public class PawnUnit : MonoBehaviour
 
     //public members
     //These values can be monitored and editted by our "states"
-    public int health;
-    public int damage;
-    public float speed;
-    public float fightSpeed; 
+ 
 
 
     public void Move()

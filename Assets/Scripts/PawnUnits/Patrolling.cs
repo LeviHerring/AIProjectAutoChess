@@ -8,12 +8,17 @@ public class Patrolling : StateManager<PawnUnit>
     {
         Debug.Log("Entering Patrolling state.");
         // Initialization logic for the Patrolling state
+
     }
 
     public override void Execute(PawnUnit parentClass)
     {
         Debug.Log("Executing Patrolling state.");
-        parentClass.Move(); // Call the Move method during patrolling
+
+        if (parentClass.health <= 0)
+        {
+            parentClass.ChangeState(new PawnDeath());
+        }
     }
 
     public override void Exit(PawnUnit parentClass)

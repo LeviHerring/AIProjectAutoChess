@@ -14,6 +14,11 @@ public class Fighting : StateManager<PawnUnit>
     {
         Debug.Log("Executing Attacking state.");
         parentClass.StartCoroutine(parentClass.Fighting());
+
+        if(parentClass.health <= 0)
+        {
+            parentClass.ChangeState(new PawnDeath());
+        }
     }
 
     public override void Exit(PawnUnit parentClass)
