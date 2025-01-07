@@ -6,45 +6,39 @@ public class Wander : SteeringBehaviourBase
 {
     public float WanderRadius = 10f;    // Radius of the wander circle
     public float WanderDistance = 10f; // Distance of the wander circle in front of the agent
-    public float WanderJitter = 1f;    // Amount of random jitter applied per second
+    public float WanderJitter = 50f;   // Amount of random jitter applied per second
+    public float Weight = 1.0f;        // Lower weight compared to Seek
 
-    private Vector3 WanderTarget = Vector3.zero; // The current target on the wander circle
-    private PawnSteering pawnSteering;
+    private Vector3 WanderTarget = Vector3.zero;
+    public PawnSteering vehicle;
 
     void Start()
     {
-        pawnSteering = GetComponent<PawnSteering>();
-
-        if (pawnSteering == null)
+        // Initialize wander target
+        if(vehicle == null)
         {
-            Debug.LogError("PawnSteering component not found on this GameObject!");
+            vehicle = GetComponent<PawnSteering>(); 
         }
-        // Initialize the wander target on the circle
         float initialAngle = Random.Range(0.0f, Mathf.PI * 2);
         WanderTarget = new Vector3(Mathf.Cos(initialAngle), 0, Mathf.Sin(initialAngle)) * WanderRadius;
     }
 
     public override Vector3 Calculate()
     {
-        // Apply jitter to the angle
         float jitterThisFrame = WanderJitter * Time.deltaTime;
         float jitterX = Random.Range(-1f, 1f) * jitterThisFrame;
         float jitterZ = Random.Range(-1f, 1f) * jitterThisFrame;
 
-        // Add jitter to the wander target and constrain it to the circle
+        // Apply jitter and constrain to circle
         WanderTarget += new Vector3(jitterX, 0, jitterZ);
         WanderTarget = WanderTarget.normalized * WanderRadius;
 
-        // Move the circle to be in front of the agent
+        // Move the circle forward and calculate target position
         Vector3 targetLocal = WanderTarget + transform.forward * WanderDistance;
-
-        // Convert the local target to world space
         Vector3 targetWorld = transform.position + targetLocal;
 
-        // Calculate the steering force
+        // Calculate steering force
         Vector3 steeringForce = targetWorld - transform.position;
-
-        // Clamp the steering force to MaxForce
-        return Vector3.ClampMagnitude(steeringForce, pawnSteering.MaxForce);
+        return Vector3.ClampMagnitude(steeringForce, GetComponent<PawnSteering>().MaxForce);
     }
 }

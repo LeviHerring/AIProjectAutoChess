@@ -18,7 +18,9 @@ public class RangedUnit : UnitBase
     void Start()
     {
         UnitManager.Instance.RegisterUnit(this);
+        ApplyAttributes();
         ChangeState(new RangedWalking());
+
     }
 
     void Update()

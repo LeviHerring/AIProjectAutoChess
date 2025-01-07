@@ -35,7 +35,7 @@ public class RangedFighting : StateManager<RangedUnit>
             {
                 if(parentClass.CurrentTarget.Team != PlayerTypes.Team.Player)
                 {
-                    Mouse.Instance.AddMoney(parentClass.CurrentTarget.price);
+                    Mouse.Instance.AddMoney(parentClass.CurrentTarget.priceOnDeath);
                 }
                 else if(parentClass.CurrentTarget.Team != PlayerTypes.Team.Enemy)
                 {

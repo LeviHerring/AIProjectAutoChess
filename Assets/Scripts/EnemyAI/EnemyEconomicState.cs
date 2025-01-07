@@ -24,13 +24,13 @@ public class EnemyEconomicState : EnemyStateManager<EnemyMouse>
     {
         List<EnemyDesires> desires = new List<EnemyDesires>
         {
-            new SaveMoneyDesire(),
-            new SpawnBasicUnitDesire(50) // Assume the cost is 50
+            new SpawnBasicUnitDesire(50), // Example cost for basic unit
+            new SaveMoneyDesire()
         };
 
         foreach (EnemyDesires desire in desires)
         {
-            desire.CalculateDesire(ai); // Calculate utility value for each desire
+            desire.CalculateDesire(ai); // Calculate desire value
         }
 
         return desires;
@@ -41,11 +41,14 @@ public class EnemyEconomicState : EnemyStateManager<EnemyMouse>
         List<EnemyDesires> desires = GetDesires(ai);
         desires.Sort((d1, d2) => d2.DesireVal.CompareTo(d1.DesireVal)); // Sort by utility
 
-        EnemyDesires bestDesire = desires[0];
+        EnemyDesires bestDesire = desires[0]; // Get highest desire value
         Debug.Log($"Performing action: {bestDesire.State}");
 
         if (bestDesire is SpawnBasicUnitDesire)
-        { // Example unit spawn
+        {
+            // Spawn the determined unit type dynamically
+            EnemyMouse.UnitType unitToSpawn = (bestDesire as SpawnBasicUnitDesire).GetUnitType();
+            ai.SpawnUnit(unitToSpawn); // Use the unitType returned from the desire
         }
     }
 }

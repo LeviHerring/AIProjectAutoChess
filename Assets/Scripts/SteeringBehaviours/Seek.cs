@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Seek : SteeringBehaviourBase
 {
-    public PawnSteering vehicle; // Ensure this is public or set via code
+    public PawnSteering vehicle; // Reference to the PawnSteering script
+    public Vector3 SeekTargetPos; // Target position for the agent to seek
+    public float StoppingDistance = 0.1f; // Threshold for considering the target reached
 
     void Awake()
     {
@@ -13,9 +15,8 @@ public class Seek : SteeringBehaviourBase
         {
             Debug.LogError("PawnSteering component not found on the GameObject!");
         }
+        vehicle.AddBehavior(this, 2f);
     }
-
-    public Vector3 SeekTargetPos;
 
     public override Vector3 Calculate()
     {
@@ -25,8 +26,11 @@ public class Seek : SteeringBehaviourBase
             return Vector3.zero;
         }
 
+        // Calculate the desired velocity towards the target
         Vector3 DesiredVelocity = (SeekTargetPos - transform.position).normalized * vehicle.MaxSpeed;
-        return (DesiredVelocity - vehicle.Velocity);
+
+        // Return the steering force (desired velocity minus current velocity)
+        return DesiredVelocity - vehicle.Velocity;
     }
 
     public void SetTarget(Vector3 targetPos)
@@ -34,5 +38,23 @@ public class Seek : SteeringBehaviourBase
         SeekTargetPos = targetPos;
     }
 
-    public bool HasReachedTarget => Vector3.Distance(transform.position, SeekTargetPos) < 0.1f; // Example threshold
+    public bool HasReachedTarget
+    {
+        get
+        {
+            // Check if the agent is within the stopping distance of the target
+            return Vector3.Distance(transform.position, SeekTargetPos) <= StoppingDistance;
+        }
+    }
+
+    // Optional debug visualizer
+    void OnDrawGizmos()
+    {
+        if (SeekTargetPos != Vector3.zero)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(transform.position, SeekTargetPos);
+            Gizmos.DrawSphere(SeekTargetPos, 0.2f);
+        }
+    }
 }

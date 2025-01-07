@@ -31,7 +31,7 @@ public class RangedReloading : StateManager<RangedUnit>
         {
             if (parentClass.CurrentTarget.health <= 0)
             {
-                Mouse.Instance.AddMoney(parentClass.CurrentTarget.price);
+                Mouse.Instance.AddMoney(parentClass.CurrentTarget.priceOnDeath);
                 parentClass.ChangeState(new RangedWalking());
                 parentClass.CurrentTarget = null; 
             }

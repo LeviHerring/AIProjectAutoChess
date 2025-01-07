@@ -18,7 +18,7 @@ public class Button : MonoBehaviour
     public void PickObject()
     {
         mouse.prefab = prefab;
-        mouse.cost = cost; 
+        mouse.cost = prefab.GetComponent<UnitBase>().Attributes.Price; 
     }
 
 }
