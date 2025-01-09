@@ -39,6 +39,7 @@ public class Fighting : StateManager<PawnUnit>
 
     public override void Exit(PawnUnit parentClass)
     {
+        parentClass.isLockedOn = false; 
         enemyCost = 0; 
         Debug.Log("Exiting Attacking state.");
         // Cleanup logic for the Attacking state

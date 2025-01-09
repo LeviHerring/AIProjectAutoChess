@@ -51,4 +51,16 @@ public class UnitManager : MonoBehaviour
         }
         return enemies;
     }
+
+    public bool HasUnitsOfTeam(PlayerTypes.Team team)
+    {
+        foreach (UnitBase unit in Units)
+        {
+            if (unit.Team == team)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

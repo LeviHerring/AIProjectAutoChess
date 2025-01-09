@@ -68,10 +68,11 @@ public class Walking : StateManager<PawnUnit>
             foreach (var enemy in enemies)
             {
                 float distance = Vector3.Distance(parentClass.transform.position, enemy.transform.position);
-                if (distance < closestDistance)
+                if (distance < closestDistance && enemy.isLockedOn == false) 
                 {
                     closestEnemy = enemy;
                     closestDistance = distance;
+                    parentClass.isLockedOn = true; 
                 }
             }
 

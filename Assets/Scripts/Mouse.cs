@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro; 
 
 public class Mouse : MonoBehaviour
 {
@@ -13,7 +14,15 @@ public class Mouse : MonoBehaviour
     public GameObject prefab;
     public int Money;
     float timer = 0;
+    float gameTime = 0;
     public int cost;
+
+    public Transform topRight;
+    public Transform bottomLeft;
+    public Transform rangedLeft;
+
+    public TextMeshProUGUI health;
+    public TextMeshProUGUI moneyText;
 
 
     private void Awake()
@@ -30,7 +39,8 @@ public class Mouse : MonoBehaviour
 
     private void Start()
     {
-        timer = 0; 
+        timer = 0;
+        gameTime = 0; 
     }
 
     private void Update()
@@ -47,7 +57,7 @@ public class Mouse : MonoBehaviour
         {
             return;
         }
-
+        gameTime += Time.deltaTime; 
         timer += Time.deltaTime; 
        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
        if(Physics.Raycast(ray, out RaycastHit raycastHit, float.MaxValue, layer))
@@ -58,10 +68,15 @@ public class Mouse : MonoBehaviour
        if(timer >= 5)
         {
             AddMoney(20);
+            StartCoroutine(CheckUnitCount());
             timer = 0; 
         }
 
-        MouseInput(); 
+        health.text = playerHealth.ToString();
+        moneyText.text = Money.ToString(); 
+
+        MouseInput();
+      
     }
 
     void MouseInput()
@@ -81,6 +96,7 @@ public class Mouse : MonoBehaviour
                 {
                     // Instantiate the prefab at the hit point, slightly above the ground
                     Instantiate(prefab, raycastHit.point + Vector3.up * 2.5f, Quaternion.identity);
+                    
 
                     // Set team information on the instantiated prefab
                     UnitBase prefabBase = prefab.GetComponent<UnitBase>();
@@ -94,6 +110,25 @@ public class Mouse : MonoBehaviour
                 }
             }
         }
+    }
+
+    private IEnumerator CheckUnitCount()
+    {
+            yield return new WaitForSeconds(10f); // Check every 10 seconds
+
+            // If no units of the player's team are found
+            if (!UnitManager.Instance.HasUnitsOfTeam(PlayerTypes.Team.Player) && gameTime > 100)
+            {
+                playerHealth -= 10; // Deduct 10 health
+                Debug.Log($"Player has no units! Health reduced to {playerHealth}");
+
+                // Check if the player is out of health
+                if (playerHealth <= 0)
+                {
+                    Debug.Log("Player has lost the game!");
+                    // Implement your game-over logic here
+                }
+            }
     }
 
     public void AddMoney(int newMoney)

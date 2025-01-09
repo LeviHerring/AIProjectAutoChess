@@ -7,19 +7,18 @@ public class HitboxScript : MonoBehaviour
     PawnUnit pawn;
     PawnUnit enemy;
     PlayerTypes.Team team;
-    int damage; 
-    // Start is called before the first frame update
+    int damage;
+
     void Start()
     {
-        pawn = GetComponentInParent<PawnUnit>(); 
+        pawn = GetComponentInParent<PawnUnit>();
         team = pawn.Team;
-        damage = pawn.damage; 
+        damage = pawn.damage;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        
+        // Optionally, update logic for the hitbox (if needed)
     }
 
     private void OnTriggerEnter(Collider other)
@@ -28,11 +27,11 @@ public class HitboxScript : MonoBehaviour
         {
             if (other.gameObject.GetComponent<UnitBase>().Team == team)
             {
-                Debug.Log("Hit Same");
+                Debug.Log("Hit Same Team");
             }
             else
             {
-                Debug.Log("Hit opposite");
+                Debug.Log("Hit Opposite Team");
                 other.gameObject.GetComponent<UnitBase>().health -= damage;
             }
         }

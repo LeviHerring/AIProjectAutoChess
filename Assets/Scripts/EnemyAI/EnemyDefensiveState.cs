@@ -23,18 +23,23 @@ public class EnemyDefensiveState : EnemyStateManager<EnemyMouse>
     public override List<EnemyDesires> GetDesires(EnemyMouse ai)
     {
         List<EnemyDesires> desires = new List<EnemyDesires>
-        {
-            new SpawnDefensiveUnitDesire(70), // Example cost for defensive unit
-            new SaveMoneyDesire()
-        };
+    {
+        new SpawnBasicUnitDesire(50),   // Assume cost 50
+        new SpawnMediumUnitDesire(150), // Assume cost 150
+        new SpawnRareUnitDesire(300)   // Assume cost 300
+    };
 
-        foreach (EnemyDesires desire in desires)
+        foreach (var desire in desires)
         {
-            desire.CalculateDesire(ai); // Calculate desire value
+            desire.CalculateDesire(ai); // Calculate the desire values
         }
+
+        // Sort desires by value, descending (highest desire first)
+        desires.Sort((a, b) => b.DesireVal.CompareTo(a.DesireVal));
 
         return desires;
     }
+
 
     private void PerformUtilityAction(EnemyMouse ai)
     {

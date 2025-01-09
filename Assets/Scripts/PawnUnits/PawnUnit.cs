@@ -1,37 +1,30 @@
-using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
-using UnityEngine.UIElements.Experimental;
 
 public class PawnUnit : UnitBase
 {
-    //Our state
+    // Our state manager for handling state transitions
     private StateManager<PawnUnit> currentState;
-
     StateManager<PawnUnit> pState;
-    public GameObject hitbox;
-
-
+    public GameObject hitbox;  // The hitbox object
 
     void Start()
     {
         UnitManager.Instance.RegisterUnit(this);
         ApplyAttributes();
         ChangeState(new Walking());
-        //health = 0;
+        // Log PawnUnit stats to debug initialization
+        Debug.Log($"Pawn Unit Initialized: Health {health}, Damage {damage}, Team {Team}");
     }
 
-    //This is called by our console application periodically
+    // This is called every frame by Unity
     void Update()
     {
-        pState.Execute(this);
-
+        pState.Execute(this);  // Execute the current state logic
     }
 
-
-    //Use this method to change states, so the old state is correctly disposed of
+    // Use this method to change states
     public void ChangeState(StateManager<PawnUnit> newState)
     {
         Debug.Log($"Changing state from {pState?.GetType().Name} to {newState.GetType().Name}");
@@ -40,9 +33,7 @@ public class PawnUnit : UnitBase
         pState?.Enter(this);
     }
 
-    //public members
-    //These values can be monitored and editted by our "states"
-
+    // Fighting coroutine to manage attack logic
     public IEnumerator Fighting()
     {
         Debug.Log("Attack");
@@ -54,10 +45,9 @@ public class PawnUnit : UnitBase
         }
 
         // Get the first (and only) hitbox
-
         if (hitbox != null) // Ensure the hitbox exists
         {
-            hitbox.SetActive(true);
+            hitbox.SetActive(true); // Activate the hitbox
 
             // Calculate direction to the current target
             Vector3 targetDirection = (CurrentTarget.transform.position - transform.position).normalized;
@@ -79,14 +69,15 @@ public class PawnUnit : UnitBase
             // hitbox.transform.Rotate(0, 90, 0); // Adjust the rotation if necessary
         }
 
+        // Wait for the duration of the attack
         yield return new WaitForSeconds(1f);
 
         // After attack duration, deactivate the hitbox
         if (hitbox != null)
         {
-            hitbox.SetActive(false);
+            hitbox.SetActive(false); // Deactivate the hitbox
         }
 
-        yield return new WaitForSeconds(fightSpeed);
+        yield return new WaitForSeconds(fightSpeed); // Wait before the next attack
     }
 }

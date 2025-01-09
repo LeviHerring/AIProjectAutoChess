@@ -57,11 +57,19 @@ public class Patrolling : StateManager<PawnUnit>
 
         }
 
-        if (Vector3.Distance(parentClass.transform.position, parentClass.CurrentTarget.transform.position) < 10)
+        if(parentClass.CurrentTarget != null)
         {
-            seekBehavior.vehicle.MaxSpeed = 0;
-            parentClass.ChangeState(new Fighting());
+            if (Vector3.Distance(parentClass.transform.position, parentClass.CurrentTarget.transform.position) < 10)
+            {
+                seekBehavior.vehicle.MaxSpeed = 0;
+                parentClass.ChangeState(new Fighting());
+            }
         }
+        else if(parentClass.CurrentTarget == null)
+        {
+            parentClass.ChangeState(new Walking()); 
+        }
+       
     }
 
     public override void Exit(PawnUnit parentClass)

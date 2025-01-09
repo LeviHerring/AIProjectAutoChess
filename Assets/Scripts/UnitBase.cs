@@ -11,7 +11,8 @@ public class UnitBase : MonoBehaviour
     public float speed;
     public float fightSpeed;
     public int priceOnDeath;
-    public UnitBase CurrentTarget; 
+    public UnitBase CurrentTarget;
+    public bool isLockedOn; 
 
     public UnitAttributes Attributes; // Reference to UnitAttributes
 
